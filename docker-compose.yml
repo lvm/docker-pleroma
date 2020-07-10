@@ -1,0 +1,37 @@
+version: '3.1'
+services:
+  db-pleroma:
+    image: postgres:11-alpine
+    container_name: db-pleroma
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: pleroma
+      POSTGRES_PASSWORD: pleroma
+      POSTGRES_DB: pleroma
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    networks:
+      - lvm_apps
+  pleroma:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+    image: pleroma
+    container_name: pleroma
+    restart: unless-stopped
+    # command: ./entrypoint.sh
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./data/uploads:/pleroma/uploads
+    links:
+      - db-pleroma
+    networks:
+      - lvm_apps
+
+networks:
+  lvm_apps:
+    external: true
