@@ -22,7 +22,7 @@ services:
     image: pleroma
     container_name: pleroma
     restart: unless-stopped
-    # command: ./entrypoint.sh
+    command: ./entrypoint.sh
     ports:
       - "4000:4000"
     volumes:
